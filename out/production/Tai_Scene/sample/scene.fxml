@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.FXMLController">
+   <children>
+      <TextField fx:id="nameText" layoutX="14.0" layoutY="14.0" />
+      <TableView fx:id="tableView" layoutX="14.0" layoutY="58.0" prefHeight="289.0" prefWidth="766.0">
+        <columns>
+          <TableColumn fx:id="nameColumn" prefWidth="75.0" text="Nazwa" />
+          <TableColumn fx:id="cechColumn" prefWidth="75.0" text="Cecha" />
+            <TableColumn fx:id="wojColumn" prefWidth="75.0" text="Województwo" />
+            <TableColumn fx:id="powColumn" prefWidth="75.0" text="Powiat" />
+            <TableColumn fx:id="gmiColumn" prefWidth="75.0" text="Gmina" />
+            <TableColumn fx:id="rodzColumn" prefWidth="75.0" text="Rodzaj gminy" />
+            <TableColumn fx:id="cityNameColumn" prefWidth="106.0" text="Nazwa miejscowości" />
+            <TableColumn fx:id="id_cityColumn" minWidth="0.0" prefWidth="56.0" text="Identyfikator miejscowości" />
+            <TableColumn fx:id="id_nameColumn" minWidth="0.0" prefWidth="63.0" text="Identyfikator nazwy ulicy" />
+        </columns>
+      </TableView>
+      <Button fx:id="searchButton" layoutX="595.0" layoutY="14.0" mnemonicParsing="false" onAction="#searchButtonClick" prefHeight="27.0" prefWidth="107.0" text="Wyszukaj" />
+      <ComboBox fx:id="wojBox" layoutX="205.0" layoutY="14.0" prefWidth="150.0" />
+      <ComboBox fx:id="powBox" layoutX="372.0" layoutY="14.0" prefWidth="150.0" />
+   </children>
+</AnchorPane>
