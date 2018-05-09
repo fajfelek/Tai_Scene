@@ -9,7 +9,10 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.Vector;
 
 public class FXMLController implements Initializable {
 
@@ -47,22 +50,40 @@ public class FXMLController implements Initializable {
     @FXML
     private Button searchButton;
 
-    Description description1 = new Description("01",
-            "02", "03", "04", "05",
-            "06", "07", "08");
-
+    HandlerChooser choser;
+    static Map<String, String> wojew = new HashMap<>();
+    static Map<String, String> miasta = new HashMap<>();
+    private String streetName;
+    private String selectedWojBox;
+    private String wojNum;
     @FXML
     private void searchButtonClick(ActionEvent event) {
 
         tableView.getItems().clear();
-        ObservableList<Description> data = FXCollections.observableArrayList();
+//        ObservableList<Description> data = FXCollections.observableArrayList();
+//
+//            tableView.getItems().add(description1);
 
-            tableView.getItems().add(description1);
+       streetName = nameText.getText();
+       selectedWojBox = wojBox.getSelectionModel().getSelectedItem();
+       wojNum = wojew.get(selectedWojBox.toUpperCase());
 
-        String value = (String) wojBox.getValue();
+       System.out.println(streetName + " + " + selectedWojBox + " --> " + wojNum);
 
-        System.out.println(value);
+       Vector<Description> streetDescription = choser.chooser(null, wojNum, "01", streetName);
 
+       System.out.println(streetDescription.size());
+
+        for(int i = 0; i < streetDescription.size(); i++) {
+            tableView.getItems().add(streetDescription.get(i));
+            System.out.println(streetDescription.get(i));
+        }
+//                String key = entry.getKey();
+//                String value = entry.getValue();
+//                System.out.println(key);// + " + " + value);
+//            }
+
+//
         tableView.refresh();
     }
 
@@ -80,20 +101,27 @@ public class FXMLController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
        //tableView.setEditable(true);
+
+        choser = new HandlerChooser();
+
         nameColumn.setCellValueFactory(new PropertyValueFactory<Description,String>("NAME"));
         cechColumn.setCellValueFactory(new PropertyValueFactory<Description,String>("CECH"));
         wojColumn.setCellValueFactory(new PropertyValueFactory<Description,String>("WOJ"));
         powColumn.setCellValueFactory(new PropertyValueFactory<Description,String>("POW"));
         gmiColumn.setCellValueFactory(new PropertyValueFactory<Description,String>("GMI"));
         rodzColumn.setCellValueFactory(new PropertyValueFactory<Description,String>("RODZ"));
-        //cityNameColumn.setCellValueFactory(new PropertyValueFactory<Description,String>("NAME"));
+        cityNameColumn.setCellValueFactory(new PropertyValueFactory<Description,String>("CITY_NAME"));
         id_cityColumn.setCellValueFactory(new PropertyValueFactory<Description,String>("ID_CITY"));
         id_nameColumn.setCellValueFactory(new PropertyValueFactory<Description,String>("ID_NAME"));
 
-        wojBoxData.addAll("Podkarpackie", "Małopolskie", "Lubuskie", "Mazowieckie");
+        wojBoxData.addAll("Wszystkie", "Podkarpackie", "Świętokrzyskie", "Wielkopolskie", "Opolskie",
+                "Kujawsko-Pomorskie", "Małopolskie", "Warmińsko-Mazurskie", "Lubuskie", "Lubelskie",
+                "Zachodniopomorskie", "Śląskie", "Łódzkie", "Mazowieckie", "Podlaskie", "Pomorskie", "Dolnośląskie");
+
         wojBox.setItems(wojBoxData);
+        wojBox.getSelectionModel().select(0);
 
-
+        wojew = choser.getWojew();
 //        wojBox.setCellFactory((comboBox) -> {
 //            return new ListCell<String>() {
 //                @Override
@@ -111,16 +139,23 @@ public class FXMLController implements Initializable {
 
         wojBox.setOnAction((event) -> {
             String selectedPerson = wojBox.getSelectionModel().getSelectedItem();
-            if (selectedPerson.equals("Lubuskie")){
-                powBox.setDisable(true);
-            }
-            System.out.println("ComboBox Action (selected: " + selectedPerson.toString() + ")");
+//            if (selectedPerson.equals("Wszystkie")){
+//                powBox.setDisable(true);
+//            } else {
+//                powBox.setDisable(false);
+//            }
+//
+//            if (wojew.containsKey(selectedPerson.toUpperCase())) {
+//                System.out.println(wojew.get(selectedPerson.toUpperCase()));
+//               System.out.println();
+//            } else {
+//                System.err.println("Nie dziala");
+//            }
+
+            System.out.println("ComboBox Action (selected: " + selectedPerson + ")");
         });
+//        Vector<Description> streetDescription = choser.chooser(null, "02", "01", "Brzozowa");
+//        System.out.println(streetDescription.size());
 
-
-//        wojBox.getItems().addAll("Podkarpackie", "Małopolskie", "Lubuskie", "Mazowieckie");
-//        if (wojBox.getValue() != null)
-//            powBox.setDisable(false);
-//        powBox.getItems().addAll("Podkarpackie", "Małopolskie", "Lubuskie", "Mazowieckie");
     }
 }

@@ -10,10 +10,9 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-        WrappingTextFieldTableCell wrappingTextFieldTableCell = new WrappingTextFieldTableCell();
         Parent root = FXMLLoader.load(getClass().getResource("scene.fxml"));
 
-        primaryStage.setTitle("Hello World");
+        primaryStage.setTitle("GUS Service Parser");
         primaryStage.setScene(new Scene(root, 800, 500));
         primaryStage.show();
     }

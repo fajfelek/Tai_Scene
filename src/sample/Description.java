@@ -13,11 +13,12 @@ public class Description {
     private SimpleStringProperty ID_CITY = new SimpleStringProperty();
     private SimpleStringProperty ID_NAME = new SimpleStringProperty();
     private SimpleStringProperty CECH = new SimpleStringProperty();
+    private SimpleStringProperty CITY_NAME = new SimpleStringProperty();
     private SimpleStringProperty NAME = new SimpleStringProperty();
 
 
     public Description(String woj, String pow, String gmi, String rodz, String id_city, String id_name,
-                       String cech, String name){
+                       String city_name, String cech, String name){
         this.WOJ.setValue(woj);
         this.POW.setValue(pow);
         this.GMI.setValue(gmi);
@@ -26,7 +27,14 @@ public class Description {
         this.ID_NAME.setValue(id_name);
         this.CECH.setValue(cech);
         this.NAME.setValue(name);
+        this.CITY_NAME.setValue(city_name);
     }
+
+    public String getCITY_NAME() { return CITY_NAME.get(); }
+
+    public SimpleStringProperty CITY_NAMEProperty() { return CITY_NAME; }
+
+    public void setCITY_NAME(String CITY_NAME) { this.CITY_NAME.set(CITY_NAME); }
 
     public String getWOJ() {
         return WOJ.get();
@@ -125,19 +133,20 @@ public class Description {
     }
 
 
-//    @Override
-//    public String toString() {
-//        return "Description{" +
-//                "WOJ='" + WOJ + '\'' +
-//                ", POW='" + POW + '\'' +
-//                ", GMI='" + GMI + '\'' +
-//                ", RODZ='" + RODZ + '\'' +
-//                ", ID_CITY='" + ID_CITY + '\'' +
-//                ", ID_NAME='" + ID_NAME + '\'' +
-//                ", CECH='" + CECH + '\'' +
-//                ", NAME='" + NAME + '\'' +
-//                '}';
-//    }
+    @Override
+    public String toString() {
+        return "Description{" +
+                "WOJ='" + WOJ + '\'' +
+                ", POW='" + POW + '\'' +
+                ", GMI='" + GMI + '\'' +
+                ", RODZ='" + RODZ + '\'' +
+                ", ID_CITY='" + ID_CITY + '\'' +
+                ", ID_NAME='" + ID_NAME + '\'' +
+                ", CITY_NAME='" + CITY_NAME + '\'' +
+                ", CECH='" + CECH + '\'' +
+                ", NAME='" + NAME + '\'' +
+                '}';
+    }
 
 }
 
