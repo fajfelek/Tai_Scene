@@ -18,6 +18,9 @@ public class HandlerChooser {
     Map<String, String> wojew = new HashMap<>();
     Map<String, String> miasta = new HashMap<>();
     Map<String, String> rodzGmi = new HashMap<>();
+    HashMap<String, HashMap<String, String>> outerMap;
+    HashMap<String, HashMap<String, String>> outerPowiat;
+    HashMap<String, String> innerPowiat;
 
     public Map<String, String> getWojew() {
         return wojew;
@@ -25,6 +28,7 @@ public class HandlerChooser {
     public Map<String, String> getMiasta() {
         return miasta;
     }
+    public HashMap<String, HashMap<String, String>> getOuterPowiat() { return outerPowiat; }
 
     public HandlerChooser() {
 
@@ -42,6 +46,7 @@ public class HandlerChooser {
             saxParser.parse(stream, userhandler);
 
             wojew = userhandler.getWojew();
+            outerPowiat = userhandler.getOuterPowiatMap();
 
         } catch (NoSuchFileException fe) {
             System.err.println("Nie znaleziono pliku TERC.xml");
@@ -58,20 +63,51 @@ public class HandlerChooser {
 
             miasta = userhandler.getMiasta();
 
-            for(Map.Entry<String, String> entry : miasta.entrySet()) {
-                String key = entry.getKey();
-                String value = entry.getValue();
-                System.out.println(key);// + " + " + value);
-            }
-
         } catch (NoSuchFileException fe) {
             System.err.println("Nie znaleziono pliku SIMC.xml");
         } catch (Exception e) {
             System.err.println("Błąd parsera SIMC");
         }
         createRodzGmiMap();
-    }
 
+        innerPowiat = outerPowiat.get("10");
+//        for(HashMap.Entry<String, String> entry : innerPowiat.entrySet()) {
+//                String key = entry.getKey();
+//                String value = entry.getValue();
+//                System.out.println(key + " + " + value);
+//            }
+//        for(HashMap.Entry<String, HashMap<String,String>> entry : outerPowiat.entrySet()) {
+//                String key = entry.getKey();
+//                HashMap value = entry.getValue();
+//                System.out.println(key + " + " + value);
+//            }
+        //            for(HashMap.Entry<String, HashMap<String,String>> entry : outerPowiat.entrySet()) {
+//                String value = entry.get("02").get("InnerKey");
+//                System.out.println("Retreived value is : " + value);
+//            }
+
+
+    }
+//    private HashMap<String,HashMap<String,String>> createBlankMap(){
+//        outerMap.put("02", null);
+//        outerMap.put("04", null);
+//        outerMap.put("06", null);
+//        outerMap.put("08", null);
+//        outerMap.put("10", null);
+//        outerMap.put("12", null);
+//        outerMap.put("14", null);
+//        outerMap.put("16", null);
+//        outerMap.put("18", null);
+//        outerMap.put("20", null);
+//        outerMap.put("22", null);
+//        outerMap.put("24", null);
+//        outerMap.put("26", null);
+//        outerMap.put("28", null);
+//        outerMap.put("30", null);
+//        outerMap.put("32", null);
+//
+//        return outerMap;
+//    }
     private void createRodzGmiMap(){
         rodzGmi.put("1", "miejska");
         rodzGmi.put("2", "wiejska");

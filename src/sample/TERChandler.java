@@ -18,13 +18,24 @@ import java.util.Map;
 
 public class TERChandler extends DefaultHandler{
 
-    boolean wojFlag = false;
-    boolean nazwaFlag = false;
-    boolean nazwadodFlag = false;
+    private boolean wojFlag = false;
+    private boolean powFlag = false;
+    private boolean nazwaFlag = false;
+    private boolean nazwadodFlag = false;
 
-    Map<String, String> wojew = new HashMap<>();
+    private Map<String, String> wojew = new HashMap<>();
+    private HashMap<String, HashMap<String, String>> outerPowiatMap = new HashMap<String, HashMap<String,String>>();
+    private HashMap<String, String>[] innerPowiatMap = new HashMap[16];
+
+    public TERChandler(){
+        for (int i = 0; i<16; i++){
+            innerPowiatMap[i] = new HashMap<String, String>();
+        }
+    }
+
 
     String woj = null;
+    String pow = null;
     String nazwa = null;
 /**
  * 
@@ -42,7 +53,10 @@ public class TERChandler extends DefaultHandler{
     public Map<String, String> getWojew() {
         return wojew;
     }
-/**
+
+    public HashMap<String, HashMap<String, String>> getOuterPowiatMap() { return outerPowiatMap; }
+
+    /**
  * 
  * @param uri
  * @param localName
@@ -56,6 +70,9 @@ public class TERChandler extends DefaultHandler{
 
         if (qName.equalsIgnoreCase("WOJ")) {
             wojFlag = true;
+        }
+        if (qName.equalsIgnoreCase("POW")) {
+            powFlag = true;
         }
         if (qName.equalsIgnoreCase("NAZWA")) {
             nazwaFlag = true;
@@ -78,12 +95,22 @@ public class TERChandler extends DefaultHandler{
         if (qName.equalsIgnoreCase("WOJ")) {
             wojFlag = false;
         }
+        if (qName.equalsIgnoreCase("POW")) {
+            powFlag = false;
+        }
         if (qName.equalsIgnoreCase("NAZWA")) {
             nazwaFlag = false;
         }
         if (qName.equalsIgnoreCase("NAZWA_DOD")) {
             nazwadodFlag = false;
         }
+    }
+
+    private void createPowiatMap(String woj){
+
+        innerPowiatMap[(Integer.parseInt(woj)/2)-1].put(pow, nazwa.substring(0,1).toUpperCase() +
+                nazwa.substring(1).toLowerCase());
+        outerPowiatMap.put(woj, innerPowiatMap[(Integer.parseInt(woj)/2)-1]);
     }
 /**
  * 
@@ -98,6 +125,9 @@ public class TERChandler extends DefaultHandler{
         if (wojFlag){
             this.woj = new String(ch, start, length);
         }
+        if (powFlag){
+            this.pow = new String(ch, start, length);
+        }
         if (nazwaFlag){
             this.nazwa = new String(ch, start, length);
         }
@@ -105,6 +135,9 @@ public class TERChandler extends DefaultHandler{
             String nazwadod = new String(ch, start, length);
             if (nazwadod.equals("województwo")){
                 addMap(nazwa,woj);
+            }
+            if (nazwadod.equals("powiat")){
+                    createPowiatMap(woj);
             }
         }
     }

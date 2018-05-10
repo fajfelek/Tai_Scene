@@ -46,6 +46,7 @@ public class FXMLController implements Initializable {
 
     @FXML
     private ComboBox powBox;
+    private ObservableList<String> powBoxData = FXCollections.observableArrayList();
 
     @FXML
     private Button searchButton;
@@ -53,6 +54,8 @@ public class FXMLController implements Initializable {
     HandlerChooser choser;
     static Map<String, String> wojew = new HashMap<>();
     static Map<String, String> miasta = new HashMap<>();
+    static HashMap<String, HashMap<String, String>> outerPowiat;
+    static HashMap<String, String> innerPowiat;
     private String streetName;
     private String selectedWojBox;
     private String wojNum;
@@ -96,7 +99,13 @@ public class FXMLController implements Initializable {
 //        }
 //    })
 
-
+    public HashMap<String,String> getInnerPowiat(String key1) {
+        HashMap innerMap = outerPowiat.get(key1);
+        if (innerMap==null) {
+            return null;
+        }
+        return innerMap;
+    }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -120,8 +129,11 @@ public class FXMLController implements Initializable {
 
         wojBox.setItems(wojBoxData);
         wojBox.getSelectionModel().select(0);
+        powBox.setDisable(true);
+        powBox.getSelectionModel().select( "Wszystkie");
 
         wojew = choser.getWojew();
+        outerPowiat = choser.getOuterPowiat();
 //        wojBox.setCellFactory((comboBox) -> {
 //            return new ListCell<String>() {
 //                @Override
@@ -138,21 +150,40 @@ public class FXMLController implements Initializable {
 //        });
 
         wojBox.setOnAction((event) -> {
-            String selectedPerson = wojBox.getSelectionModel().getSelectedItem();
-//            if (selectedPerson.equals("Wszystkie")){
-//                powBox.setDisable(true);
-//            } else {
-//                powBox.setDisable(false);
-//            }
-//
-//            if (wojew.containsKey(selectedPerson.toUpperCase())) {
-//                System.out.println(wojew.get(selectedPerson.toUpperCase()));
-//               System.out.println();
-//            } else {
-//                System.err.println("Nie dziala");
-//            }
+            String selectedWoj = wojBox.getSelectionModel().getSelectedItem();
+            String wojNum = wojew.get(selectedWoj.toUpperCase());
 
-            System.out.println("ComboBox Action (selected: " + selectedPerson + ")");
+            if (selectedWoj.equals("Wszystkie")){
+                powBox.setDisable(true);
+                powBox.getSelectionModel().select( "Wszystkie");
+            } else {
+                powBox.setDisable(false);
+            }
+
+            if (outerPowiat.containsKey(wojNum))
+            {
+                powBoxData.clear();
+                powBoxData.add("Wszystkie");
+                System.err.println("JEST " + wojNum);
+                innerPowiat = getInnerPowiat(wojNum);
+                for(Map.Entry<String, String> entry : innerPowiat.entrySet()) {
+                    powBoxData.addAll(entry.getValue());
+                }
+                powBox.setItems(powBoxData);
+                powBox.getSelectionModel().select(0);
+            } else {
+                System.err.println("Nie ma");
+            }
+
+
+//            powBoxData.addAll("Wszystkie", "Podkarpackie", "Świętokrzyskie", "Wielkopolskie", "Opolskie",
+//                    "Kujawsko-Pomorskie", "Małopolskie", "Warmińsko-Mazurskie", "Lubuskie", "Lubelskie",
+//                    "Zachodniopomorskie", "Śląskie", "Łódzkie", "Mazowieckie", "Podlaskie", "Pomorskie", "Dolnośląskie");
+//
+//            wojBox.setItems(wojBoxData);
+//            wojBox.getSelectionModel().select(0);
+
+            System.out.println("ComboBox Action (selected: " + selectedWoj + ")");
         });
 //        Vector<Description> streetDescription = choser.chooser(null, "02", "01", "Brzozowa");
 //        System.out.println(streetDescription.size());
