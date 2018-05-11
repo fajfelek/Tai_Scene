@@ -37,6 +37,8 @@ public class XmlHandler2 extends DefaultHandler {
     private Map<String, String> miasta;
     private Map<String, String> rodzGmi;
     private Map<String, String> wojew;
+    private HashMap<String, HashMap<String, String>> outerPowiat;
+    private HashMap<String, String> innerPowiat;
 
     private int counter = 0;
 
@@ -71,13 +73,22 @@ public class XmlHandler2 extends DefaultHandler {
  * @param name 
  */
     public XmlHandler2(String woj, String pow, String name, Map<String, String> miasta, Map<String, String> wojew,
-                       Map<String, String> rodzGmi) {
+                       Map<String, String> rodzGmi,HashMap<String, HashMap<String, String>> outerPowiat) {
         this.woj = woj;
         this.name = name;
         this.pow = pow;
         this.miasta = miasta;
         this.rodzGmi = rodzGmi;
         this.wojew = wojew;
+        this.outerPowiat = outerPowiat;
+    }
+
+    public HashMap<String,String> getInnerPowiat(String key1) {
+        HashMap innerMap = outerPowiat.get(key1);
+        if (innerMap==null) {
+            return null;
+        }
+        return innerMap;
     }
 /**
  * 
@@ -200,6 +211,8 @@ public class XmlHandler2 extends DefaultHandler {
                 NAME = name2;
                 CITY_NAME = miasta.get(ID_CITY);
                 RODZ = rodzGmi.get(RODZ);
+                innerPowiat = getInnerPowiat(WOJ);
+                POW = innerPowiat.get(POW);
                 for (Map.Entry<String, String> entry : wojew.entrySet()) {
                     if (entry.getValue().equals(WOJ)) {
                         WOJ = entry.getKey();

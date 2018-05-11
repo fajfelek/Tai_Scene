@@ -56,24 +56,55 @@ public class FXMLController implements Initializable {
     static Map<String, String> miasta = new HashMap<>();
     static HashMap<String, HashMap<String, String>> outerPowiat;
     static HashMap<String, String> innerPowiat;
+
     private String streetName;
     private String selectedWojBox;
     private String wojNum;
+    private String powNum;
+
+
+    private String selectedPowBox;
     @FXML
     private void searchButtonClick(ActionEvent event) {
-
         tableView.getItems().clear();
-//        ObservableList<Description> data = FXCollections.observableArrayList();
-//
-//            tableView.getItems().add(description1);
+        streetName = nameText.getText();
+        selectedWojBox = wojBox.getSelectionModel().getSelectedItem();
+        wojNum = wojew.get(selectedWojBox.toUpperCase());
 
-       streetName = nameText.getText();
-       selectedWojBox = wojBox.getSelectionModel().getSelectedItem();
-       wojNum = wojew.get(selectedWojBox.toUpperCase());
+        if (outerPowiat.containsKey(wojNum))
+        {
+            innerPowiat = getInnerPowiat(wojNum);
+            for(Map.Entry<String, String> entry : innerPowiat.entrySet()) {
+                powBoxData.addAll(entry.getValue());
+            }
+        }
 
-       System.out.println(streetName + " + " + selectedWojBox + " --> " + wojNum);
+        System.out.println(streetName + " + " + selectedWojBox + " --> " + wojNum);
 
-       Vector<Description> streetDescription = choser.chooser(null, wojNum, "01", streetName);
+        if(!powBox.isDisable()) {
+            selectedPowBox = (String) powBox.getSelectionModel().getSelectedItem();
+            if(selectedPowBox.equals("Wszystkie")){
+                powNum = null;
+            } else {
+                selectedWojBox = wojBox.getSelectionModel().getSelectedItem();
+                String wojNum = wojew.get(selectedWojBox.toUpperCase());
+                innerPowiat = getInnerPowiat(wojNum);
+
+                System.out.println(selectedPowBox);
+                for (HashMap.Entry<String, String> entry : innerPowiat.entrySet()) {
+
+                    if (entry.getValue().equals(selectedPowBox)) {
+                        powNum = entry.getKey();
+                        break;
+                    }
+                }
+            }
+        } else {
+            powNum = null;
+        }
+
+System.out.println(wojNum + " + " + powNum + " + " + streetName);
+       Vector<Description> streetDescription = choser.chooser(wojNum, powNum, streetName);
 
        System.out.println(streetDescription.size());
 
@@ -90,14 +121,6 @@ public class FXMLController implements Initializable {
         tableView.refresh();
     }
 
-//
-//    final List options = wojBox.getItems();
-//    wojBox.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener() {
-//        @Override public void changed(ObservableValue ov, Number oldSelected, Number newSelected) {
-//            System.out.println("Old Selected Option: " + options.get(oldSelected.intValue()));
-//            System.out.println("New Selected Option: " +options.get(newSelected.intValue()));
-//        }
-//    })
 
     public HashMap<String,String> getInnerPowiat(String key1) {
         HashMap innerMap = outerPowiat.get(key1);
@@ -134,26 +157,13 @@ public class FXMLController implements Initializable {
 
         wojew = choser.getWojew();
         outerPowiat = choser.getOuterPowiat();
-//        wojBox.setCellFactory((comboBox) -> {
-//            return new ListCell<String>() {
-//                @Override
-//                protected void updateItem(String item, boolean empty) {
-//                    super.updateItem(item, empty);
-//
-//                    if (item == null || empty) {
-//                        setText(null);
-//                    } else {
-//                        setText(item);
-//                    }
-//                }
-//            };
-//        });
 
         wojBox.setOnAction((event) -> {
-            String selectedWoj = wojBox.getSelectionModel().getSelectedItem();
-            String wojNum = wojew.get(selectedWoj.toUpperCase());
+            selectedWojBox = wojBox.getSelectionModel().getSelectedItem();
+            String wojNum = wojew.get(selectedWojBox.toUpperCase());
+            powBox.getSelectionModel().select("Wszystkie");
 
-            if (selectedWoj.equals("Wszystkie")){
+            if (selectedWojBox.equals("Wszystkie")){
                 powBox.setDisable(true);
                 powBox.getSelectionModel().select( "Wszystkie");
             } else {
@@ -175,18 +185,9 @@ public class FXMLController implements Initializable {
                 System.err.println("Nie ma");
             }
 
-
-//            powBoxData.addAll("Wszystkie", "Podkarpackie", "Świętokrzyskie", "Wielkopolskie", "Opolskie",
-//                    "Kujawsko-Pomorskie", "Małopolskie", "Warmińsko-Mazurskie", "Lubuskie", "Lubelskie",
-//                    "Zachodniopomorskie", "Śląskie", "Łódzkie", "Mazowieckie", "Podlaskie", "Pomorskie", "Dolnośląskie");
-//
-//            wojBox.setItems(wojBoxData);
-//            wojBox.getSelectionModel().select(0);
-
-            System.out.println("ComboBox Action (selected: " + selectedWoj + ")");
+            System.out.println("ComboBox Action (selected: " + selectedWojBox + ")");
         });
-//        Vector<Description> streetDescription = choser.chooser(null, "02", "01", "Brzozowa");
-//        System.out.println(streetDescription.size());
 
     }
+
 }

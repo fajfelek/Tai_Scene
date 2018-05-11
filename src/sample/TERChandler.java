@@ -136,7 +136,7 @@ public class TERChandler extends DefaultHandler{
             if (nazwadod.equals("województwo")){
                 addMap(nazwa,woj);
             }
-            if (nazwadod.equals("powiat")){
+            if (nazwadod.equals("powiat") || nazwadod.equals("miasto na prawach powiatu")){
                     createPowiatMap(woj);
             }
         }

@@ -15,12 +15,11 @@ import java.util.Vector;
  */
 public class HandlerChooser {
 
-    Map<String, String> wojew = new HashMap<>();
-    Map<String, String> miasta = new HashMap<>();
-    Map<String, String> rodzGmi = new HashMap<>();
-    HashMap<String, HashMap<String, String>> outerMap;
-    HashMap<String, HashMap<String, String>> outerPowiat;
-    HashMap<String, String> innerPowiat;
+    private Map<String, String> wojew = new HashMap<>();
+    private Map<String, String> miasta = new HashMap<>();
+    private Map<String, String> rodzGmi = new HashMap<>();
+    private HashMap<String, HashMap<String, String>> outerPowiat;
+    private int counter;
 
     public Map<String, String> getWojew() {
         return wojew;
@@ -62,6 +61,11 @@ public class HandlerChooser {
             saxParser.parse(stream, userhandler);
 
             miasta = userhandler.getMiasta();
+//            for(Map.Entry<String, String> entry : miasta.entrySet()) {
+//                String key = entry.getKey();
+//                String value = entry.getValue();
+//                System.out.println(key + " + " + value);
+//            }
 
         } catch (NoSuchFileException fe) {
             System.err.println("Nie znaleziono pliku SIMC.xml");
@@ -70,44 +74,9 @@ public class HandlerChooser {
         }
         createRodzGmiMap();
 
-        innerPowiat = outerPowiat.get("10");
-//        for(HashMap.Entry<String, String> entry : innerPowiat.entrySet()) {
-//                String key = entry.getKey();
-//                String value = entry.getValue();
-//                System.out.println(key + " + " + value);
-//            }
-//        for(HashMap.Entry<String, HashMap<String,String>> entry : outerPowiat.entrySet()) {
-//                String key = entry.getKey();
-//                HashMap value = entry.getValue();
-//                System.out.println(key + " + " + value);
-//            }
-        //            for(HashMap.Entry<String, HashMap<String,String>> entry : outerPowiat.entrySet()) {
-//                String value = entry.get("02").get("InnerKey");
-//                System.out.println("Retreived value is : " + value);
-//            }
-
 
     }
-//    private HashMap<String,HashMap<String,String>> createBlankMap(){
-//        outerMap.put("02", null);
-//        outerMap.put("04", null);
-//        outerMap.put("06", null);
-//        outerMap.put("08", null);
-//        outerMap.put("10", null);
-//        outerMap.put("12", null);
-//        outerMap.put("14", null);
-//        outerMap.put("16", null);
-//        outerMap.put("18", null);
-//        outerMap.put("20", null);
-//        outerMap.put("22", null);
-//        outerMap.put("24", null);
-//        outerMap.put("26", null);
-//        outerMap.put("28", null);
-//        outerMap.put("30", null);
-//        outerMap.put("32", null);
-//
-//        return outerMap;
-//    }
+
     private void createRodzGmiMap(){
         rodzGmi.put("1", "miejska");
         rodzGmi.put("2", "wiejska");
@@ -119,14 +88,13 @@ public class HandlerChooser {
     }
     /**
      *
-     * @param param
      * @param woj
      * @param pow
      * @param ulic
      * @return
      */
 
-    public Vector<Description> chooser(String param, String woj, String pow, String ulic) {
+    public Vector<Description> chooser(String woj, String pow, String ulic) {
         System.out.println("DOTARLEM przed try");
         try {
             File stream = new File("src/resources/data/ULIC.xml");
@@ -134,30 +102,27 @@ public class HandlerChooser {
             SAXParser saxParser = factory.newSAXParser();
             System.out.println("DOTARLEM po wcytaniu ULIC");
 
-        System.out.println(param + " + " + woj + " + " + pow + " + " + ulic);
+        System.out.println(woj + " + " + pow + " + " + ulic);
 
         // <WOJ>
-        if (param == null && woj != null && pow == null && ulic != null){
-            XmlHandler1 userhandler = new XmlHandler1(woj, ulic);
+        if (woj != null && pow == null && ulic != null){
+            XmlHandler1 userhandler = new XmlHandler1(woj, ulic, miasta, wojew, rodzGmi, outerPowiat);
             saxParser.parse(stream, userhandler);
-            //return userhandler.getCounter();
+            counter = userhandler.getCounter();
+            return userhandler.getStreetDescription();
         }
         // <WOJ/POW>
-        if (param == null && woj != null && pow != null && ulic != null){
-            System.out.println("DOTARLEM do IF");
-            XmlHandler2 userhandler = new XmlHandler2(woj, pow, ulic, miasta, wojew, rodzGmi);
-            System.out.println(stream);
+        if (woj != null && pow != null && ulic != null){
+            XmlHandler2 userhandler = new XmlHandler2(woj, pow, ulic, miasta, wojew, rodzGmi, outerPowiat);
             saxParser.parse(stream, userhandler);
-            System.out.println(param + " ++ " + woj + " ++ " + pow + " ++ " + ulic);
-            int counter = userhandler.getCounter();
-
+            counter = userhandler.getCounter();
             return userhandler.getStreetDescription();
         }
         // <ulica>
-        if (param == null && woj == null && pow == null && ulic != null){
-            XmlHandler3 userhandler = new XmlHandler3(ulic);
+        if (woj == null && pow == null && ulic != null){
+            XmlHandler3 userhandler = new XmlHandler3(ulic, miasta, wojew, rodzGmi, outerPowiat);
             saxParser.parse(stream, userhandler);
-            //return userhandler.getCounter();
+            return userhandler.getStreetDescription();
         }
         } catch (Exception e){
 

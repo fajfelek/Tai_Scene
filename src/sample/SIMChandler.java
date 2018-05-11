@@ -20,11 +20,13 @@ public class SIMChandler extends DefaultHandler{
 
     boolean nazwaFlag = false;
     boolean symFlag = false;
+    boolean symPodFlag = false;
 
     Map<String, String> miasta = new HashMap<>();
 
     String sym = null;
     String nazwa = null;
+    String symPod = null;
     /**
      *
      * @param city
@@ -59,6 +61,9 @@ public class SIMChandler extends DefaultHandler{
         if (qName.equalsIgnoreCase("SYM")) {
             symFlag = true;
         }
+        if (qName.equalsIgnoreCase("SYMPOD")) {
+            symPodFlag = true;
+        }
     }
     /**
      *
@@ -77,6 +82,9 @@ public class SIMChandler extends DefaultHandler{
         if (qName.equalsIgnoreCase("SYM")) {
             symFlag = false;
         }
+        if (qName.equalsIgnoreCase("SYMPOD")) {
+            symPodFlag = false;
+        }
     }
     /**
      *
@@ -88,14 +96,14 @@ public class SIMChandler extends DefaultHandler{
     @Override
     public void characters(char ch[], int start, int length) throws SAXException {
 
-
-        if (symFlag){
-            this.sym = new String(ch, start, length);
-        }
-        if (nazwaFlag){
-            this.nazwa = new String(ch, start, length);
+            if (nazwaFlag){
+                this.nazwa = new String(ch, start, length);
+            }
+            if (symFlag){
+                this.sym = new String(ch, start, length);
                 addMap(nazwa,sym);
-        }
+            }
+
     }
 }
 
